@@ -8,95 +8,105 @@ Console.WriteLine("D - Division");
 Console.WriteLine("M - Multiplication");
 Console.WriteLine("Q - Quit Game");
 
-bool validInput = false;
-string? userInput;
+string userMenuChoice = null;
 
 do
 {
-	userInput = Console.ReadLine();
-	if (userInput != null)
-	{
-		if (IsValidMenuChoice(userInput))
-		{
-			userInput = userInput.Trim().ToUpper();
-			validInput = true;
-		}
-		else
-		{
-			Console.WriteLine("Invalid Input. Please type a valid menu option.");
-			userInput = null;
-		}
-	}
-} while (userInput == null && validInput == false);
+    try
+    {
+        userMenuChoice = GetUserMenuSelection();
+    }
+    catch (ArgumentOutOfRangeException ex)
+    {
+        Console.WriteLine(ex.Message);
+        Console.WriteLine("Error occurred. Please try again.");
+    }
+} while (userMenuChoice == null);
 
-
-
-switch (userInput)
+string GetUserMenuSelection()
 {
-	case "V":
-		ViewGameHistory();
-		break;
-	case "A":
-		Addition();
-		break;
-	case "S":
-		Subtraction();
-		break;
-	case "M":
-		Multiplication();
-		break;
-	case "D":
-		Division();
-		break;
-	case "Q":
-		QuitGame();
-		break;
+    string? userInput;
+
+    userInput = Console.ReadLine();
+
+    if (userInput != null)
+    {
+		userInput = userInput.Trim().ToUpper();
+
+		if (!IsValidMenuChoice(userInput))
+        {
+            throw new ArgumentOutOfRangeException("Invalid Input. Please type a valid menu option.");
+        }
+    }
+    return userInput;
 }
+
+//switch (userInput)
+//{
+//  case "V":
+//    ViewGameHistory();
+//    break;
+//  case "A":
+//    Addition();
+//    break;
+//  case "S":
+//    Subtraction();
+//    break;
+//  case "M":
+//    Multiplication();
+//    break;
+//  case "D":
+//    Division();
+//    break;
+//  case "Q":
+//    QuitGame();
+//    break;
+//}
 
 void ViewGameHistory()
 {
-	Console.WriteLine("COMING SOON-View game history");
-	Console.WriteLine("Please press any key to continue");
-	Console.Read();
+  Console.WriteLine("COMING SOON-View game history");
+  Console.WriteLine("Please press any key to continue");
+  Console.Read();
 }
 
 void Addition()
 {
-	Console.WriteLine("COMING SOON-Addition problem");
-	Console.WriteLine("Press any key to continue");
-	Console.ReadLine();
+  Console.WriteLine("COMING SOON-Addition problem");
+  Console.WriteLine("Press any key to continue");
+  Console.ReadLine();
 }
 
 void Subtraction()
 {
-	Console.WriteLine("COMING SOON-Subtraction problem");
-	Console.WriteLine("Press any key to continue");
-	Console.ReadLine();
+  Console.WriteLine("COMING SOON-Subtraction problem");
+  Console.WriteLine("Press any key to continue");
+  Console.ReadLine();
 }
 
 void Multiplication()
 {
-	Console.WriteLine("COMING SOON-Multiplication problem");
-	Console.WriteLine("Press any key to continue");
-	Console.ReadLine();
+  Console.WriteLine("COMING SOON-Multiplication problem");
+  Console.WriteLine("Press any key to continue");
+  Console.ReadLine();
 }
 
 void Division()
 {
-	Console.WriteLine("COMING SOON-Division problem");
-	Console.WriteLine("Press any key to continue");
-	Console.ReadLine();
+  Console.WriteLine("COMING SOON-Division problem");
+  Console.WriteLine("Press any key to continue");
+  Console.ReadLine();
 }
 
 void QuitGame()
 {
-	Console.WriteLine("COMING SOON-Quit the game");
-	Console.WriteLine("Press any key to continue");
-	Console.ReadLine();
+  Console.WriteLine("COMING SOON-Quit the game");
+  Console.WriteLine("Press any key to continue");
+  Console.ReadLine();
 }
 
 bool IsValidMenuChoice(string input)
 {
-	string[] choices = { "V", "A", "Q", "D", "M", "S" };
-	return Array.IndexOf(choices, input.ToUpper()) != -1;
+  string[] choices = { "V", "A", "Q", "D", "M", "S" };
+  return Array.IndexOf(choices, input.ToUpper()) != -1;
 }
