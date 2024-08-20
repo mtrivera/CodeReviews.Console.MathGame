@@ -1,14 +1,8 @@
-﻿Console.WriteLine("What game would you like to play today?");
-Console.WriteLine("Choose from the options below");
+﻿DisplayMainMenu();
 
-Console.WriteLine("V - View Game History");
-Console.WriteLine("S - Subtraction");
-Console.WriteLine("A - Addition");
-Console.WriteLine("D - Division");
-Console.WriteLine("M - Multiplication");
-Console.WriteLine("Q - Quit Game");
-
+int roundCount = 3;
 string userMenuChoice = null;
+List<string> gameHistory = new List<string>();
 
 do
 {
@@ -41,27 +35,38 @@ string GetUserMenuSelection()
     return userInput;
 }
 
-//switch (userInput)
-//{
-//  case "V":
-//    ViewGameHistory();
-//    break;
-//  case "A":
-//    Addition();
-//    break;
-//  case "S":
-//    Subtraction();
-//    break;
-//  case "M":
-//    Multiplication();
-//    break;
-//  case "D":
-//    Division();
-//    break;
-//  case "Q":
-//    QuitGame();
-//    break;
-//}
+int GetRandomNum()
+{
+    Random rand = new Random();
+    return rand.Next(0, 100);
+}
+
+(int, int) GetRandomPair()
+{
+    return (GetRandomNum(), GetRandomNum());
+}
+
+switch (userMenuChoice)
+{
+    case "V":
+        ViewGameHistory();
+        break;
+    case "A":
+        Addition(GetRandomPair(), gameHistory, roundCount);
+        break;
+    case "S":
+        Subtraction();
+        break;
+    case "M":
+        Multiplication();
+        break;
+    case "D":
+        Division();
+        break;
+    case "Q":
+        QuitGame();
+        break;
+}
 
 void ViewGameHistory()
 {
@@ -70,13 +75,65 @@ void ViewGameHistory()
   Console.Read();
 }
 
-void Addition()
+void Addition((int, int)pairOfNums, List<string> history, int count)
 {
-  Console.WriteLine("COMING SOON-Addition problem");
-  Console.WriteLine("Press any key to continue");
-  Console.ReadLine();
+ if (count == 0)
+ {
+        return;
+ }
+
+  bool IsValidGuess = false;
+  string? userInput;
+  int userGuess = 0;
+  int solution = pairOfNums.Item1 + pairOfNums.Item2;
+  Console.WriteLine("Addition");
+  Console.WriteLine(pairOfNums.Item1.ToString().PadLeft(6));
+  // TODO: Fix padding
+  Console.WriteLine("+ " + pairOfNums.Item2.ToString().PadLeft(6));
+  
+  // TODO
+  // Move to seperate method: GetUserGuess
+  do
+  {
+        userInput = Console.ReadLine();
+        if (userInput != null && userInput != "")
+        {
+            IsValidGuess = int.TryParse(userInput, out userGuess);
+            if (IsValidGuess)
+            {
+				if (userGuess == solution)
+				{
+					DateTime localDate = DateTime.Now;
+					history.Add($"{localDate}\tAddition\t{userGuess}");
+					Console.WriteLine("Correct. Press any key to continue.");
+					Addition(GetRandomPair(), gameHistory, count - 1);
+				}
+				else
+				{
+					Console.WriteLine("Incorrect.");
+					return;
+				}
+			}
+            else
+            {
+                Console.WriteLine("Invalid input. Please enter a numerical solution.");
+            }
+        }
+  } while(IsValidGuess == false);
 }
 
+void DisplayMainMenu()
+{
+	Console.WriteLine("What game would you like to play today?");
+	Console.WriteLine("Choose from the options below");
+
+	Console.WriteLine("V - View Game History");
+	Console.WriteLine("S - Subtraction");
+	Console.WriteLine("A - Addition");
+	Console.WriteLine("D - Division");
+	Console.WriteLine("M - Multiplication");
+	Console.WriteLine("Q - Quit Game");
+}
 void Subtraction()
 {
   Console.WriteLine("COMING SOON-Subtraction problem");
