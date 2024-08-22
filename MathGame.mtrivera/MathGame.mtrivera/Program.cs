@@ -176,20 +176,17 @@ void QuitGame()
 	Environment.Exit(0);
 }
 
-// TODO: Switch to dictionary
-//Dictionary<string, string> mathGameCommands = new Dictionary<string, string>
-//{
-//	{"A", "Addition"},
-//	{"D", "Division"},
-//	{"M", "Multiplication"},
-//	{"S", "Subtraction"},
-//	{"V", "View History"},
-//	{"Q", "Quit Game"}
-//};
-
-//return mathGameCommands.ContainsKey(input.ToUpper()))
 bool IsValidMenuChoice(string input)
 {
-  string[] choices = { "V", "A", "Q", "D", "M", "S" };
-  return Array.IndexOf(choices, input.ToUpper()) != -1;
+	Dictionary<string, string> mathGameCommands = new Dictionary<string, string>
+	{
+		{"A", "Addition"},
+		{"D", "Division"},
+		{"M", "Multiplication"},
+		{"S", "Subtraction"},
+		{"V", "View History"},
+		{"Q", "Quit Game"}
+	};
+
+	return mathGameCommands.ContainsKey(input.ToUpper());
 }
