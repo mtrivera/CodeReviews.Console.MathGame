@@ -1,21 +1,47 @@
-﻿DisplayMainMenu();
+﻿List<string> gameHistory = new List<string>();
+RunGame();
 
-int roundCount = 3;
-string userMenuChoice = null;
-List<string> gameHistory = new List<string>();
-
-do
+void RunGame()
 {
-    try
+	DisplayMainMenu();
+	int roundCount = 3;
+	string userMenuChoice = null;
+
+	do
     {
-        userMenuChoice = GetUserMenuSelection();
-    }
-    catch (ArgumentOutOfRangeException ex)
-    {
-        Console.WriteLine(ex.Message);
-        Console.WriteLine("Error occurred. Please try again.");
-    }
-} while (userMenuChoice == null);
+        try
+        {
+            userMenuChoice = GetUserMenuSelection();
+        }
+        catch (ArgumentOutOfRangeException ex)
+        {
+            Console.WriteLine(ex.Message);
+            Console.WriteLine("Error occurred. Please try again.");
+        }
+    } while (userMenuChoice == null);
+
+	switch (userMenuChoice)
+	{
+		case "V":
+			ViewGameHistory(gameHistory);
+			break;
+		case "A":
+			Addition(GetRandomPair(), gameHistory, roundCount);
+			break;
+		case "S":
+			Subtraction();
+			break;
+		case "M":
+			Multiplication();
+			break;
+		case "D":
+			Division();
+			break;
+		case "Q":
+			QuitGame();
+			break;
+	}
+}
 
 string GetUserMenuSelection()
 {
@@ -46,40 +72,29 @@ int GetRandomNum()
     return (GetRandomNum(), GetRandomNum());
 }
 
-switch (userMenuChoice)
+void Print(string s)
 {
-    case "V":
-        ViewGameHistory();
-        break;
-    case "A":
-        Addition(GetRandomPair(), gameHistory, roundCount);
-        break;
-    case "S":
-        Subtraction();
-        break;
-    case "M":
-        Multiplication();
-        break;
-    case "D":
-        Division();
-        break;
-    case "Q":
-        QuitGame();
-        break;
+	Console.WriteLine(s);
 }
 
-void ViewGameHistory()
+void ViewGameHistory(List<string> scores)
 {
-  Console.WriteLine("COMING SOON-View game history");
-  Console.WriteLine("Please press any key to continue");
-  Console.Read();
+	if (scores.Count > 0)
+	{
+		scores.ForEach(Print);
+	}
+	else
+	{
+		Console.WriteLine("Empty history. Please play a game.");
+	}
+  RunGame();
 }
 
 void Addition((int, int)pairOfNums, List<string> history, int count)
 {
  if (count == 0)
  {
-        return;
+        RunGame();
  }
 
   bool IsValidGuess = false;
@@ -106,7 +121,7 @@ void Addition((int, int)pairOfNums, List<string> history, int count)
 					DateTime localDate = DateTime.Now;
 					history.Add($"{localDate}\tAddition\t{userGuess}");
 					Console.WriteLine("Correct. Press any key to continue.");
-					Addition(GetRandomPair(), gameHistory, count - 1);
+					Addition(GetRandomPair(), history, count - 1);
 				}
 				else
 				{
@@ -157,11 +172,22 @@ void Division()
 
 void QuitGame()
 {
-  Console.WriteLine("COMING SOON-Quit the game");
-  Console.WriteLine("Press any key to continue");
-  Console.ReadLine();
+	Console.WriteLine("Thanks for playing!");
+	Environment.Exit(0);
 }
 
+// TODO: Switch to dictionary
+//Dictionary<string, string> mathGameCommands = new Dictionary<string, string>
+//{
+//	{"A", "Addition"},
+//	{"D", "Division"},
+//	{"M", "Multiplication"},
+//	{"S", "Subtraction"},
+//	{"V", "View History"},
+//	{"Q", "Quit Game"}
+//};
+
+//return mathGameCommands.ContainsKey(input.ToUpper()))
 bool IsValidMenuChoice(string input)
 {
   string[] choices = { "V", "A", "Q", "D", "M", "S" };
