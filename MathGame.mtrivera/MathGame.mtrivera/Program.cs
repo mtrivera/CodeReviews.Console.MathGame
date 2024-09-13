@@ -29,13 +29,13 @@ void RunGame()
 			Addition(GetRandomPair(), gameHistory, roundCount);
 			break;
 		case "S":
-			Subtraction();
+			Subtraction(GetRandomPair(), gameHistory, roundCount);
 			break;
 		case "M":
-			Multiplication();
+			Multiplication(GetRandomPair(), gameHistory, roundCount);
 			break;
 		case "D":
-			Division();
+			Division(GetRandomPair(), gameHistory, roundCount);
 			break;
 		case "Q":
 			QuitGame();
@@ -90,6 +90,35 @@ void ViewGameHistory(List<string> scores)
   RunGame();
 }
 
+/*TODO: Refactor to SpawnProblem
+// Will handle all math operations
+// Should only take tuple parameter
+// Create different methods:
+// string SpawnProblem((int, int) randomNumPair) 
+// int GetUserGuess
+// bool IsUserCorrect (int userSolution, int calcSolution
+*/
+int GetUserGuess()
+{
+	int userGuess = 0;
+	bool IsValidGuess = false;
+	string? userInput;
+	do
+	{
+		userInput = Console.ReadLine();
+		if (String.IsNullOrEmpty(userInput))
+		{
+			IsValidGuess = int.TryParse(userInput, out userGuess);
+
+			if (!IsValidGuess)
+			{
+				Console.WriteLine("Invalid input. Please enter a numerical solution.");
+			}
+		}
+	} while (IsValidGuess == false);
+
+	return userGuess;
+}
 void Addition((int, int)pairOfNums, List<string> history, int count)
 {
  if (count == 0)
@@ -107,7 +136,8 @@ void Addition((int, int)pairOfNums, List<string> history, int count)
   Console.WriteLine("+ " + pairOfNums.Item2.ToString().PadLeft(6));
   
   // TODO
-  // Move to seperate method: GetUserGuess
+  // Move to seperate method: GetUserGuess -> int
+  // Should only return the userguess as a number
   do
   {
         userInput = Console.ReadLine();
@@ -149,25 +179,155 @@ void DisplayMainMenu()
 	Console.WriteLine("M - Multiplication");
 	Console.WriteLine("Q - Quit Game");
 }
-void Subtraction()
+void Subtraction((int, int)pairOfNums, List<string> history, int count)
 {
-  Console.WriteLine("COMING SOON-Subtraction problem");
-  Console.WriteLine("Press any key to continue");
-  Console.ReadLine();
+	if (count == 0)
+	{
+		RunGame();
+	}
+
+	bool IsValidGuess = false;
+	string? userInput;
+	int userGuess = 0;
+	int solution = pairOfNums.Item1 - pairOfNums.Item2;
+	Console.WriteLine("Subtraction");
+	Console.WriteLine(pairOfNums.Item1.ToString().PadLeft(6));
+	// TODO: Fix padding
+	Console.WriteLine("- " + pairOfNums.Item2.ToString().PadLeft(6));
+
+	// TODO
+	// Move to seperate method: GetUserGuess -> int
+	// Should only return the userguess as a number
+	do
+	{
+		userInput = Console.ReadLine();
+		if (userInput != null && userInput != "")
+		{
+			IsValidGuess = int.TryParse(userInput, out userGuess);
+			if (IsValidGuess)
+			{
+				if (userGuess == solution)
+				{
+					DateTime localDate = DateTime.Now;
+					history.Add($"{localDate}\tSubtraction\t{userGuess}");
+					Console.WriteLine("Correct. Press any key to continue.");
+					Subtraction(GetRandomPair(), history, count - 1);
+				}
+				else
+				{
+					Console.WriteLine("Incorrect.");
+					return;
+				}
+			}
+			else
+			{
+				Console.WriteLine("Invalid input. Please enter a numerical solution.");
+			}
+		}
+	} while (IsValidGuess == false);
 }
 
-void Multiplication()
+void Multiplication((int, int)pairOfNums, List<string> history, int count)
 {
-  Console.WriteLine("COMING SOON-Multiplication problem");
-  Console.WriteLine("Press any key to continue");
-  Console.ReadLine();
+	if (count == 0)
+	{
+		RunGame();
+	}
+
+	bool IsValidGuess = false;
+	string? userInput;
+	int userGuess = 0;
+	int solution = pairOfNums.Item1 * pairOfNums.Item2;
+	Console.WriteLine("Multiplication");
+	Console.WriteLine(pairOfNums.Item1.ToString().PadLeft(6));
+	// TODO: Fix padding
+	Console.WriteLine("* " + pairOfNums.Item2.ToString().PadLeft(6));
+
+	// TODO
+	// Move to seperate method: GetUserGuess -> int
+	// Should only return the userguess as a number
+	do
+	{
+		userInput = Console.ReadLine();
+		if (userInput != null && userInput != "")
+		{
+			IsValidGuess = int.TryParse(userInput, out userGuess);
+			if (IsValidGuess)
+			{
+				if (userGuess == solution)
+				{
+					DateTime localDate = DateTime.Now;
+					history.Add($"{localDate}\tMultiplication\t{userGuess}");
+					Console.WriteLine("Correct. Press any key to continue.");
+					Multiplication(GetRandomPair(), history, count - 1);
+				}
+				else
+				{
+					Console.WriteLine("Incorrect.");
+					return;
+				}
+			}
+			else
+			{
+				Console.WriteLine("Invalid input. Please enter a numerical solution.");
+			}
+		}
+	} while (IsValidGuess == false);
 }
 
-void Division()
+void Division((int, int) pairOfNums, List<string> history, int count)
 {
-  Console.WriteLine("COMING SOON-Division problem");
-  Console.WriteLine("Press any key to continue");
-  Console.ReadLine();
+	if (count == 0)
+	{
+		RunGame();
+	}
+
+	bool IsValidGuess = false;
+	string? userInput;
+	int userGuess = 0;
+
+	// Check that division results in whole number
+	while (pairOfNums.Item1 % pairOfNums.Item2 != 0)
+	{
+		pairOfNums = GetRandomPair();
+	}
+
+	int solution = pairOfNums.Item1 / pairOfNums.Item2;
+	Console.WriteLine("Divison");
+	Console.WriteLine(pairOfNums.Item1.ToString().PadLeft(6));
+	// TODO: Fix padding
+	Console.WriteLine("/ " + pairOfNums.Item2.ToString().PadLeft(6));
+
+	// TODO
+	// Move to seperate method: GetUserGuess -> int
+	// Should only return the userguess as a number
+	do
+	{
+		userInput = Console.ReadLine();
+		if (userInput != null && userInput != "")
+		{
+			IsValidGuess = int.TryParse(userInput, out userGuess);
+			if (IsValidGuess)
+			{
+				if (userGuess == solution)
+				{
+					DateTime localDate = DateTime.Now;
+					history.Add($"{localDate}\tDivision\t{userGuess}");
+					Console.WriteLine("Correct. Press any key to continue.");
+					Division(GetRandomPair(), history, count - 1);
+				}
+				else
+				{
+					Console.WriteLine("Incorrect.");
+					return;
+				}
+			}
+			else
+			{
+				Console.WriteLine("Invalid input. Please enter a numerical solution.");
+			}
+		}
+	} while (IsValidGuess == false);
 }
 
 void QuitGame()
