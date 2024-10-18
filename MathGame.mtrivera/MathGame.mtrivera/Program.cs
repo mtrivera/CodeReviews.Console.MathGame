@@ -1,10 +1,14 @@
-﻿class Program
+﻿namespace MathGame.mtrivera
 {
-	static void Main()
+	class Program
 	{
+		static void Main()
+		{
+			MathGame mg = new();
+			mg.Play();
+		}
 	}
 }
-
 //List<string> gameHistory = new List<string>();
 //RunGame();
 
