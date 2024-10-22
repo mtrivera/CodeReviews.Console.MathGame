@@ -1,5 +1,4 @@
-﻿
-namespace MathGame.mtrivera
+﻿namespace MathGame.mtrivera
 {
 	class Problem
 	{
@@ -12,6 +11,17 @@ namespace MathGame.mtrivera
 		{
 			Random rand = new Random();
 			return rand.Next(minSeed, maxSeed);
+		}
+
+		public void DisplayDifficultyMenu(Difficulty difficulty)
+		{
+			Console.WriteLine($"Current difficulty: {difficulty}");
+			Console.WriteLine();
+			Console.WriteLine("Please select a new difficulty:");
+			Console.WriteLine("N - Novice (Least difficult)");
+			Console.WriteLine("I - Intermediate");
+			Console.WriteLine("A - Advanced");
+			Console.WriteLine("E - Expert (Most difficult)");
 		}
 
 		public int[] GetRandomNums(int count)
@@ -45,7 +55,6 @@ namespace MathGame.mtrivera
 			{
 				operands = GetRandomNums(2);
 			}
-
 			DisplayContent(operands, division.ProblemOperator, division.ProblemType);
 
 			return operands[0] / operands[1];
@@ -154,6 +163,11 @@ namespace MathGame.mtrivera
 				case "V":
 					ViewGameHistory(history, problemCount);
 					break;
+				case "C":
+					DisplayDifficultyMenu((Difficulty)problemCount);
+					problemCount = GetDifficulty();
+					this.GameLoop(history, problemCount);
+					break;
 				case "A":
 					this.Spawn(this.Addition, history, "Addition", problemCount);
 					break;
@@ -196,6 +210,7 @@ namespace MathGame.mtrivera
 			Console.WriteLine("Choose from the options below");
 
 			Console.WriteLine("V - View Game History");
+			Console.WriteLine("C - Change Difficulty");
 			Console.WriteLine("S - Subtraction");
 			Console.WriteLine("A - Addition");
 			Console.WriteLine("D - Division");
@@ -208,6 +223,7 @@ namespace MathGame.mtrivera
 			Dictionary<string, string> mathGameCommands = new Dictionary<string, string>
 			{
 				{"A", "Addition"},
+				{"C", "Change Difficulty"},
 				{"D", "Division"},
 				{"M", "Multiplication"},
 				{"S", "Subtraction"},
@@ -217,6 +233,7 @@ namespace MathGame.mtrivera
 
 			return mathGameCommands.ContainsKey(input.ToUpper());
 		}
+
 
 		public string GetUserMenuSelection()
 		{
@@ -236,6 +253,54 @@ namespace MathGame.mtrivera
 			return userInput!;
 		}
 
+		bool IsValidDifficultyChoice(string input)
+		{
+			Dictionary<string, Difficulty> difficultyLevels = new Dictionary<string, Difficulty>
+			{
+				{"N", Difficulty.Novice},
+				{"I", Difficulty.Intermediate},
+				{"A", Difficulty.Advanced},
+				{"E", Difficulty.Expert}
+			};
+
+			return difficultyLevels.ContainsKey(input.ToUpper());
+		}
+
+		public int GetDifficulty()
+		{
+			Dictionary<string, Difficulty> difficultyLevels = new Dictionary<string, Difficulty>
+			{
+				{"N", Difficulty.Novice},
+				{"I", Difficulty.Intermediate},
+				{"A", Difficulty.Advanced},
+				{"E", Difficulty.Expert}
+			};
+
+			bool isValidDifficulty = false;
+			string? userInput = null;
+
+			do
+			{
+				userInput = Console.ReadLine();
+
+				if (userInput != null)
+				{
+					userInput = userInput.Trim().ToUpper();
+
+					if (IsValidDifficultyChoice(userInput))
+					{
+						isValidDifficulty = true;
+					}
+					else
+					{
+						Console.WriteLine("Invalid Input. Please type a valid menu option.");
+					}
+				}
+			} while (isValidDifficulty == false);
+
+			return (int) difficultyLevels[userInput!];
+		}
+		
 		public void Quit()
 		{
 			Console.WriteLine("Thanks for playing!");
