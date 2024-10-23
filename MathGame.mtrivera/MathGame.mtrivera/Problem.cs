@@ -4,6 +4,7 @@
 	{
 		public const int MIN_RAND_SEED = 0;
 		public const int MAX_RAND_SEED = 101;
+		public bool isRandomMode = false;
 
 		public record MathProblem(string ProblemType, string ProblemOperator);
 
@@ -93,6 +94,12 @@
 			if (userGuess == solution)
 			{
 				RecordScore(userGuess, mathProblemType, history);
+				
+				if (isRandomMode)
+				{
+					RandomMode(history, count - 1);
+				}
+				
 				this.Spawn(mathOperation, history, mathProblemType, count - 1);
 			}
 
@@ -168,6 +175,10 @@
 					problemCount = GetDifficulty();
 					this.GameLoop(history, problemCount);
 					break;
+				case "R":
+					isRandomMode = true;
+					RandomMode(history, problemCount);
+					break;
 				case "A":
 					this.Spawn(this.Addition, history, "Addition", problemCount);
 					break;
@@ -204,12 +215,37 @@
 			this.GameLoop(scores, problemCount);
 		}
 
+		public void RandomMode(List<string> history, int problemCount)
+		{
+			Random rand = new Random();
+			int problemIndex = rand.Next(0, 4);
+
+			List<Func<int>> problems = new List<Func<int>>()
+			{
+				Addition,
+				Subtraction,
+				Multiplication,
+				Division,
+			};
+
+			Dictionary<Func<int>, string> operationNames = new Dictionary<Func<int>, string>
+			{
+				{Addition, "Addition"},
+				{Subtraction, "Subtraction"},
+				{Multiplication, "Multiplication"},
+				{Division, "Division"}
+			};
+
+			Spawn(problems[problemIndex], history, operationNames[problems[problemIndex]], problemCount);
+		}
+
 		public void DisplayMainMenu()
 		{
 			Console.WriteLine("What game would you like to play today?");
 			Console.WriteLine("Choose from the options below");
 
 			Console.WriteLine("V - View Game History");
+			Console.WriteLine("R - Random Mode (Random math problems)");
 			Console.WriteLine("C - Change Difficulty");
 			Console.WriteLine("S - Subtraction");
 			Console.WriteLine("A - Addition");
@@ -224,6 +260,7 @@
 			{
 				{"A", "Addition"},
 				{"C", "Change Difficulty"},
+				{"R", "Random Mode"},
 				{"D", "Division"},
 				{"M", "Multiplication"},
 				{"S", "Subtraction"},
