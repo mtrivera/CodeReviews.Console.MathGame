@@ -1,10 +1,15 @@
-﻿namespace MathGame.mtrivera
+﻿using System.Diagnostics;
+
+namespace MathGame.mtrivera
 {
 	class Problem
 	{
 		public const int MIN_RAND_SEED = 0;
 		public const int MAX_RAND_SEED = 101;
 		public bool isRandomMode = false;
+		public bool isTimeTrial = false;
+
+		Stopwatch stopwatch = new Stopwatch();
 
 		public record MathProblem(string ProblemType, string ProblemOperator);
 
@@ -81,6 +86,12 @@
 		{
 			if (count == 0) 
 			{
+				if (isTimeTrial)
+				{
+					stopwatch.Stop();
+				}
+
+				Console.WriteLine(stopwatch.Elapsed);
 				this.GameLoop(history, count);
 			}
 
@@ -91,6 +102,11 @@
 			int solution = mathOperation();
 			userGuess = GetUserGuess(userInput);
 
+			if (isTimeTrial)
+			{
+				stopwatch.Start();
+			}
+		
 			if (userGuess == solution)
 			{
 				RecordScore(userGuess, mathProblemType, history);
@@ -108,7 +124,7 @@
 		void RecordScore(int userGuess, string problemType, List<string> history)
 		{
 			DateTime localDate = DateTime.Now;
-			history.Add($"{localDate}\t{problemType}\t{userGuess}");
+			history.Add($"{localDate}\t{problemType}\t{userGuess}\t{stopwatch.Elapsed}");
 			Console.WriteLine("Correct. Press any key to continue.");
 		}
 
@@ -173,6 +189,10 @@
 				case "C":
 					DisplayDifficultyMenu((Difficulty)problemCount);
 					problemCount = GetDifficulty();
+					this.GameLoop(history, problemCount);
+					break;
+				case "T":
+					isTimeTrial = true;
 					this.GameLoop(history, problemCount);
 					break;
 				case "R":
@@ -245,6 +265,7 @@
 			Console.WriteLine("Choose from the options below");
 
 			Console.WriteLine("V - View Game History");
+			Console.WriteLine("T - Time Trial");
 			Console.WriteLine("R - Random Mode (Random math problems)");
 			Console.WriteLine("C - Change Difficulty");
 			Console.WriteLine("S - Subtraction");
@@ -259,6 +280,7 @@
 			Dictionary<string, string> mathGameCommands = new Dictionary<string, string>
 			{
 				{"A", "Addition"},
+				{"T", "Time Trial"},
 				{"C", "Change Difficulty"},
 				{"R", "Random Mode"},
 				{"D", "Division"},
