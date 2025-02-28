@@ -19,9 +19,17 @@ namespace MathGame.mtrivera
 			return rand.Next(minSeed, maxSeed);
 		}
 
-		public void DisplayDifficultyMenu(Difficulty difficulty)
+		public void DisplayDifficultyMenu(int problemCount)
 		{
-			Console.WriteLine($"Current difficulty: {difficulty}");
+			Dictionary<int, string> difficultyTitle = new Dictionary<int, string>
+			{
+				{4, "Novice"},
+				{6, "Intermediate"},
+				{8, "Advanced"},
+				{12, "Expert"}
+			};
+
+			Console.WriteLine($"Current difficulty: {difficultyTitle[problemCount]}");
 			Console.WriteLine();
 			Console.WriteLine("Please select a new difficulty:");
 			Console.WriteLine("N - Novice (Least difficult)");
@@ -187,8 +195,8 @@ namespace MathGame.mtrivera
 					ViewGameHistory(history, problemCount);
 					break;
 				case "C":
-					DisplayDifficultyMenu((Difficulty)problemCount);
-					problemCount = GetDifficulty();
+					DisplayDifficultyMenu(problemCount);
+					problemCount = GetDifficultySelectionFromUser();
 					this.GameLoop(history, problemCount);
 					break;
 				case "T":
@@ -325,14 +333,14 @@ namespace MathGame.mtrivera
 			return difficultyLevels.ContainsKey(input.ToUpper());
 		}
 
-		public int GetDifficulty()
+		public int GetDifficultySelectionFromUser()
 		{
-			Dictionary<string, Difficulty> difficultyLevels = new Dictionary<string, Difficulty>
+			Dictionary<string, int> difficultyLevels = new Dictionary<string, int>
 			{
-				{"N", Difficulty.Novice},
-				{"I", Difficulty.Intermediate},
-				{"A", Difficulty.Advanced},
-				{"E", Difficulty.Expert}
+				{"N", Difficulty.Novice.Level},
+				{"I", Difficulty.Intermediate.Level},
+				{"A", Difficulty.Advanced.Level},
+				{"E", Difficulty.Expert.Level}
 			};
 
 			bool isValidDifficulty = false;
@@ -357,7 +365,7 @@ namespace MathGame.mtrivera
 				}
 			} while (isValidDifficulty == false);
 
-			return (int) difficultyLevels[userInput!];
+			return difficultyLevels[userInput!];
 		}
 		
 		public void Quit()

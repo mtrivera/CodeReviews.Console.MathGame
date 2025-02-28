@@ -1,20 +1,11 @@
-﻿enum Difficulty
-{
-	Novice = 4, //Default, number of questions
-	Intermediate = 6,
-	Advanced = 8,
-	Expert = 12
-};
-
-namespace MathGame.mtrivera
+﻿namespace MathGame.mtrivera
 {
 	class MathGame
 	{
 		Problem problem = new();
 		public List<string> GameHistory { get; set; } = new List<string>();
-		public int ProblemRemainingCount { get; set; } = (int) Difficulty.Novice;
+		public int ProblemRemainingCount { get; set; } = Difficulty.Novice.Level;
 		
-
 		public void Play()
 		{
 			problem.GameLoop(GameHistory, ProblemRemainingCount);
